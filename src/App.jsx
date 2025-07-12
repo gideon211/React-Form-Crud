@@ -1,22 +1,31 @@
 import { useState } from "react";
 import Form from "./components/form";
 import List from "./components/userList";
+import { v4 as uuidv4 } from 'uuid';
 
 const App = () => {
-  const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null); // For edit mode
+  const [users, setUsers] = useState([
+    { name: "John Doe", email: "john1@gmail.com", id: uuidv4() },
+    { name: "Jane Doe", email: "jane2@gmail.com", id: uuidv4() },
+    { name: "Jim Doe", email: "jim3@gmail.com", id: uuidv4() },
+  ]);
+
+  const [editingUser, setEditingUser] = useState(null);
 
   const addUser = (user) => {
     if (editingUser) {
-      // Update existing user
+      // Update existing user by ID
       const updatedUsers = users.map((u) =>
-        u.email === editingUser.email ? user : u
+        u.id === editingUser.id ? { ...user, id: editingUser.id } : u
       );
       setUsers(updatedUsers);
-      setEditingUser(null); // Exit edit mode
+      console.log("User updated:", { ...user, id: editingUser.id }); // ✅ log
+      setEditingUser(null);
     } else {
       // Add new user
-      setUsers([...users, user]);
+      const newUser = { ...user, id: uuidv4() };
+      setUsers([...users, newUser]);
+      console.log("New user added:", newUser); // ✅ log
     }
   };
 
@@ -25,10 +34,10 @@ const App = () => {
   };
 
   const handleDelete = (userToDelete) => {
-    const filteredUsers = users.filter((u) => u.email !== userToDelete.email);
+    const filteredUsers = users.filter((u) => u.id !== userToDelete.id);
     setUsers(filteredUsers);
-    // If user being edited is deleted
-    if (editingUser && editingUser.email === userToDelete.email) {
+
+    if (editingUser && editingUser.id === userToDelete.id) {
       setEditingUser(null);
     }
   };
@@ -42,3 +51,4 @@ const App = () => {
 };
 
 export default App;
+

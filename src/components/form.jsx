@@ -1,32 +1,23 @@
 import { useState, useEffect } from 'react';
 
-const Form = (props) => {
+const Form = ({ addUser, editingUser }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  // Populate form when editingUser changes
   useEffect(() => {
-    if (props.editingUser) {
-      setName(props.editingUser.name);
-      setEmail(props.editingUser.email);
+    if (editingUser) {
+      setName(editingUser.name);
+      setEmail(editingUser.email);
     } else {
       setName('');
       setEmail('');
     }
-  }, [props.editingUser]);
-
-  const handleName = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleEmail = (event) => {
-    setEmail(event.target.value);
-  };
+  }, [editingUser]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const newUser = { name, email };
-    props.addUser(newUser);
+    addUser(newUser);
     setName('');
     setEmail('');
   };
@@ -38,13 +29,13 @@ const Form = (props) => {
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl space-y-6 transition-all duration-300"
       >
         <h2 className="text-3xl font-semibold text-slate-800 text-center">
-          {props.editingUser ? 'Edit User' : 'Contact Us'}
+          {editingUser ? 'Edit User' : 'Contact Us'}
         </h2>
 
         <div>
           <label className="block text-sm font-medium text-slate-600">Name</label>
           <input
-            onChange={handleName}
+            onChange={(e) => setName(e.target.value)}
             value={name}
             name="name"
             type="text"
@@ -56,7 +47,7 @@ const Form = (props) => {
         <div>
           <label className="block text-sm font-medium text-slate-600">Email</label>
           <input
-            onChange={handleEmail}
+            onChange={(e) => setEmail(e.target.value)}
             value={email}
             name="email"
             type="email"
@@ -69,7 +60,7 @@ const Form = (props) => {
           type="submit"
           className="w-full bg-indigo-600 text-white font-medium py-3 rounded-xl hover:bg-indigo-700 shadow-md transition"
         >
-          {props.editingUser ? 'Update' : 'Submit'}
+          {editingUser ? 'Update' : 'Submit'}
         </button>
       </form>
     </div>
